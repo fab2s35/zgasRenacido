@@ -12,6 +12,7 @@ import logoutRoute from "./src/routes/logout.js";
 import registerClient from "./src/routes/registerClients.js";
 import passwordRecoveryRoutes from "./src/routes/passwordRecovery.js";
 import blogRoutes from "./src/routes/blog.js";
+import { validateAuthToken } from "./src/middlewares/validateAuthToken.js";
 
 // Creo una constante que es igual a la libreria que importé
 const app = express();
@@ -20,11 +21,11 @@ app.use(express.json());
 //Que acepte cookies en postman
 app.use(cookieParser());
 // Definir las rutas de las funciones que tendrá la página web
-app.use("/api/products", productsRoutes);
+app.use("/api/products", validateAuthToken(["employee", "admin"]), productsRoutes);
 app.use("/api/customers", customersRoutes);
 app.use("/api/employee", employeeRoutes);
 app.use("/api/branches", branchesRoutes);
-app.use("/api/reviews", reviewRoutes);
+app.use("/api/reviews", validateAuthToken(["employee"]), reviewRoutes);
 
 app.use("/api/registerEmployees", registerEmployesRoutes);
 app.use("/api/login", loginRoute);
