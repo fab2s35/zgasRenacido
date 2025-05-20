@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './input.css';
 import Header from './components/Header/Header.jsx';
 import MainPage from './pages/MainPage/MainPage.jsx';
+import Products from './pages/Products/Products.jsx';
 
 
 
@@ -14,7 +16,7 @@ function App() {
         {/* Ruta predeterminada para cargar la página de inicio */}
         <Route path="/" element={<MainPage />} />
         <Route path="/mainPage" element={<MainPage />} />
-
+        <Route path="/Products" element={<Products />} />
        
 
       </Routes>

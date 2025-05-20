@@ -16,7 +16,7 @@ function MainPage() {
             <div className="text-center">
               <h1 className="banner-title">Página de gestión de Zeta Gas en El Salvador.</h1>
               <p className="banner-description">
-              "Gestión de manera eficiente y segura todas las operaciones con Zeta Gas en El Salvador. Acceso a herramientas para administrar productos, pedidos y clientes, optimizando tu experiencia en el mercado energético. 
+              Gestión de manera eficiente y segura todas las operaciones con Zeta Gas en El Salvador. Acceso a herramientas para administrar productos, pedidos y clientes, optimizando tu experiencia en el mercado energético. 
               </p>
               <div className="banner-buttons">
                 <a href="/Products" className="btn-primary">Seguir</a>

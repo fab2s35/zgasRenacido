@@ -13,6 +13,17 @@ import registerClient from "./src/routes/registerClients.js";
 import passwordRecoveryRoutes from "./src/routes/passwordRecovery.js";
 import blogRoutes from "./src/routes/blog.js";
 import { validateAuthToken } from "./src/middlewares/validateAuthToken.js";
+import cors from "cors";
+
+
+//Middlewares
+app.use(
+    cors({
+        origin:"*",
+        //permitir enviar cookies y credenciales
+        credentials: true,
+    })
+)
 
 // Creo una constante que es igual a la libreria que importé
 const app = express();

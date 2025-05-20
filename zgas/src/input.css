@@ -1,0 +1,4 @@
+/* src/input.css o tu archivo global CSS */
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
