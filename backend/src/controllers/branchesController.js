@@ -8,6 +8,18 @@ branchesController.getbranches = async (req, res) => {
   res.json(branches);
 };
 
+branchesController.getBranchById = async (req, res) => {
+  try {
+    const branch = await Branch.findById(req.params.id);
+    if (!branch) {
+      return res.status(404).json({ message: "Sucursal no encontrada" });
+    }
+    res.json(branch);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener la sucursal", error });
+  }
+};
+
 // INSERT
 branchesController.createbranches = async (req, res) => {
   const { name, lastName, birthday, email, password, telephone, dui } = req.body;

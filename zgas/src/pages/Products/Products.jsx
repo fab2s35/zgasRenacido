@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Products.css';
 import { createTheme } from '@mui/material/styles';
 import { AppProvider } from '@toolpad/core/AppProvider';
@@ -29,35 +29,29 @@ const productsDataSource = {
   getMany: async ({ paginationModel }) => {
     const response = await fetch(API);
     const data = await response.json();
-  
-    // Verifica los datos recibidos (esto es para depurar)
     console.log("Datos recibidos de la API:", data);
-  
-    // Asignamos los campos necesarios de cada producto
+
     const items = data.map(product => {
-      // Aquí nos aseguramos de que cada producto tenga los campos esperados
       return {
-        id: product._id,  // Asignamos _id a id
-        name: product.title || '',  // Usamos 'title', si no existe usamos un valor por defecto
-        description: product.text || '',  // Lo mismo para 'text' (descripción)
-        price: product.price || 0,  // Si no tiene 'price', asignamos 0
-        stock: product.stock || 0,  // Si no tiene 'stock', asignamos 0
+        id: product._id,
+        name: product.name || '',  // Asignamos 'name'
+        description: product.description || '',  // Asignamos 'description'
+        price: product.price || 0,
+        stock: product.stock || 0,
       };
     });
-  
-    // Verifica que los campos estén correctamente asignados (esto es para depurar)
+
     console.log("Productos transformados:", items);
-  
+
     const start = paginationModel?.page * paginationModel?.pageSize || 0;
     const end = start + (paginationModel?.pageSize || items.length);
-  
+
     return {
       items: items.slice(start, end),
       itemCount: items.length,
     };
   },
-  
-  
+
   getOne: async (id) => {
     const response = await fetch(`${API}/${id}`);
     if (!response.ok) throw new Error("Producto no encontrado");
@@ -98,12 +92,12 @@ const productsDataSource = {
   validate: (formValues) => {
     let issues = [];
 
-    if (!formValues.title) {
-      issues.push({ message: "El nombre es obligatorio", path: ["title"] });
+    if (!formValues.name) {
+      issues.push({ message: "El nombre es obligatorio", path: ["name"] });
     }
 
-    if (!formValues.text) {
-      issues.push({ message: "La descripción es obligatoria", path: ["text"] });
+    if (!formValues.description) {
+      issues.push({ message: "La descripción es obligatoria", path: ["description"] });
     }
 
     if (!formValues.price || isNaN(formValues.price)) {
@@ -122,9 +116,28 @@ const productsCache = new DataSourceCache();
 
 export default function Products() {
   const router = useDemoRouter('/products');
+  const [product, setProduct] = useState(null); // Para guardar los datos del producto
 
   const isCreating = router.pathname === '/products/new';
   const isEditing = /^\/products\/\d+\/edit$/.test(router.pathname);
+
+  // Extraer ID del producto de la URL para la edición
+  const match = router.pathname.match(/\/products\/(\d+)\/edit/);
+  const productId = match ? match[1] : null;
+
+  useEffect(() => {
+    if (isEditing && productId) {
+      // Llamamos a la API para obtener el producto con el ID
+      productsDataSource.getOne(productId)
+        .then(productData => {
+          console.log('Producto para editar:', productData);
+          setProduct(productData); // Guardamos el producto en el estado
+        })
+        .catch(error => {
+          console.error('Error al obtener el producto:', error);
+        });
+    }
+  }, [isEditing, productId]);
 
   return (
     <DemoProvider>
@@ -143,7 +156,12 @@ export default function Products() {
               dataSourceCache={productsCache}
               rootPath="/products"
               initialPageSize={5}
-              defaultValues={{ title: '', text: '', price: '', stock: '' }}
+              defaultValues={{
+                name: product ? product.name : '', 
+                description: product ? product.description : '', 
+                price: product ? product.price : '', 
+                stock: product ? product.stock : ''
+              }} // Usar el estado para los valores por defecto
             />
           </PageContainer>
         </DashboardLayout>

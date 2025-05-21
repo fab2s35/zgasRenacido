@@ -8,6 +8,21 @@ productsController.getProducts = async (req, res) => {
   res.json(products);
 };
 
+
+// SELECT (un solo producto por _id)
+productsController.getProductById = async (req, res) => {
+  try {
+    const product = await productsModel.findById(req.params.id);  // Busca el producto por _id
+    if (!product) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
+    res.json(product);  // Devuelve el producto encontrado
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener el producto", error });
+  }
+};
+
+
 // INSERT
 productsController.createProducts = async (req, res) => {
   const { name, description, price, stock } = req.body;

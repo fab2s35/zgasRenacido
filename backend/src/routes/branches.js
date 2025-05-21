@@ -11,6 +11,7 @@ router
 
 router
   .route("/:id")
+  .get(branchesController.getBranchById)  
   .put(branchesController.updatebranches)
   .delete(branchesController.deletebranches);
 

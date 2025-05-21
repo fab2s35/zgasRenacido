@@ -28,7 +28,7 @@ function Header() {
               <div className="menu-desktop">
                 <a href="/" className="nav-link">Inicio</a>
                 <a href="/Products" className="nav-link">Productos</a>
-                <a href="#" className="nav-link">Marketplace</a>
+                <a href="/Branches" className="nav-link">Sucursales</a>
                 <a href="#" className="nav-link">Company</a>
               </div>
             </nav>

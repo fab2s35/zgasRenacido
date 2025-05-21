@@ -1,9 +1,11 @@
 /*
     Campos:
         nombre
-        descripcion
-        precio
+        address
+        birthday
         stock
+        schedule
+        telephone
 */
 
 import { Schema, model } from "mongoose";
