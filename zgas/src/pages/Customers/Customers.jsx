@@ -8,7 +8,7 @@ import { Crud, DataSourceCache } from '@toolpad/core/Crud';
 import { DemoProvider, useDemoRouter } from '@toolpad/core/internal';  
 import { Button, Box } from '@mui/material';  
 
-const API = "http://localhost:4000/api/customers";  // Cambié API de branches a customers
+const API = "http://localhost:4000/api/customers";  
 
 const demoTheme = createTheme({
   cssVariables: {

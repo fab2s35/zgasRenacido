@@ -8,7 +8,7 @@ customersController.getcustomers = async (req, res) => {
   res.json(customers);
 };
 
-
+// SELECT (un solo cliente)
 customersController.getcustomerById = async (req, res) => {
   try {
     const customer = await customersModel.findById(req.params.id);

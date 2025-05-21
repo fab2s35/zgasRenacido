@@ -161,7 +161,7 @@ export default function Products() {
                 description: product ? product.description : '', 
                 price: product ? product.price : '', 
                 stock: product ? product.stock : ''
-              }} // Usar el estado para los valores por defecto
+              }} 
             />
           </PageContainer>
         </DashboardLayout>

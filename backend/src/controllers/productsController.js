@@ -9,7 +9,7 @@ productsController.getProducts = async (req, res) => {
 };
 
 
-// SELECT (un solo producto por _id)
+// SELECT (un solo producto)
 productsController.getProductById = async (req, res) => {
   try {
     const product = await productsModel.findById(req.params.id);  // Busca el producto por _id

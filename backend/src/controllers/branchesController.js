@@ -8,6 +8,7 @@ branchesController.getbranches = async (req, res) => {
   res.json(branches);
 };
 
+// SELECT (una sola sucursal)
 branchesController.getBranchById = async (req, res) => {
   try {
     const branch = await branchesModel.findById(req.params.id);
