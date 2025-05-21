@@ -20,8 +20,8 @@ const demoTheme = createTheme({
 const productsDataSource = {
   fields: [
     { field: 'id', headerName: 'ID' },
-    { field: 'title', headerName: 'Nombre', flex: 1 },
-    { field: 'text', headerName: 'Descripción', flex: 1 },
+    { field: 'name', headerName: 'Nombre', flex: 1 },
+    { field: 'description', headerName: 'Descripción', flex: 1 },
     { field: 'price', headerName: 'Precio', flex: 1 },
     { field: 'stock', headerName: 'Stock', flex: 1 },
   ],
@@ -29,16 +29,35 @@ const productsDataSource = {
   getMany: async ({ paginationModel }) => {
     const response = await fetch(API);
     const data = await response.json();
-
+  
+    // Verifica los datos recibidos (esto es para depurar)
+    console.log("Datos recibidos de la API:", data);
+  
+    // Asignamos los campos necesarios de cada producto
+    const items = data.map(product => {
+      // Aquí nos aseguramos de que cada producto tenga los campos esperados
+      return {
+        id: product._id,  // Asignamos _id a id
+        name: product.title || '',  // Usamos 'title', si no existe usamos un valor por defecto
+        description: product.text || '',  // Lo mismo para 'text' (descripción)
+        price: product.price || 0,  // Si no tiene 'price', asignamos 0
+        stock: product.stock || 0,  // Si no tiene 'stock', asignamos 0
+      };
+    });
+  
+    // Verifica que los campos estén correctamente asignados (esto es para depurar)
+    console.log("Productos transformados:", items);
+  
     const start = paginationModel?.page * paginationModel?.pageSize || 0;
-    const end = start + (paginationModel?.pageSize || data.length);
-
+    const end = start + (paginationModel?.pageSize || items.length);
+  
     return {
-      items: data.slice(start, end),
-      itemCount: data.length,
+      items: items.slice(start, end),
+      itemCount: items.length,
     };
   },
-
+  
+  
   getOne: async (id) => {
     const response = await fetch(`${API}/${id}`);
     if (!response.ok) throw new Error("Producto no encontrado");

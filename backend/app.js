@@ -16,17 +16,18 @@ import { validateAuthToken } from "./src/middlewares/validateAuthToken.js";
 import cors from "cors";
 
 
+// Creo una constante que es igual a la libreria que importé
+const app = express();
+
 //Middlewares
 app.use(
     cors({
-        origin:"*",
-        //permitir enviar cookies y credenciales
+        origin: "*",
+        //Permitir enviar cookies y creedenciales
         credentials: true,
     })
-)
+);
 
-// Creo una constante que es igual a la libreria que importé
-const app = express();
 //Que acepte datos en json
 app.use(express.json());
 //Que acepte cookies en postman
