@@ -20,7 +20,7 @@ const customersSchema = new Schema(
     },
 
     birthday: {
-      type: Date,
+      type: String,
       require: true,
     },
 

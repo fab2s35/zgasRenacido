@@ -1,9 +1,8 @@
 /*
     Campos:
-        nombre
+        name
         address
         birthday
-        stock
         schedule
         telephone
 */
@@ -22,7 +21,7 @@ const branchesSchema = new Schema(
     },
 
     birthday: {
-      type: Date,
+      type: Number,
       require: true,
       min: 0,
     },

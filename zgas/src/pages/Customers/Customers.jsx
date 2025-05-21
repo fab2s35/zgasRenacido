@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';  
-import './Branches.css';  
+import './Customers.css';  
 import { createTheme } from '@mui/material/styles';  
 import { AppProvider } from '@toolpad/core/AppProvider';  
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';  
@@ -8,7 +8,7 @@ import { Crud, DataSourceCache } from '@toolpad/core/Crud';
 import { DemoProvider, useDemoRouter } from '@toolpad/core/internal';  
 import { Button, Box } from '@mui/material';  
 
-const API = "http://localhost:4000/api/branches";  
+const API = "http://localhost:4000/api/customers";  // Cambié API de branches a customers
 
 const demoTheme = createTheme({
   cssVariables: {
@@ -17,14 +17,15 @@ const demoTheme = createTheme({
   colorSchemes: { light: true },
 });
 
-const branchesDataSource = {
+const customersDataSource = {
   fields: [
     { field: 'id', headerName: 'ID' },
     { field: 'name', headerName: 'Nombre', flex: 1 },
-    { field: 'address', headerName: 'Dirección', flex: 1 },
-    { field: 'birthday', headerName: 'Fecha de Creación', flex: 1 },
-    { field: 'schedule', headerName: 'Horario', flex: 1 },
+    { field: 'lastName', headerName: 'Apellido', flex: 1 },
+    { field: 'birthday', headerName: 'Fecha de Nacimiento', flex: 1 },
+    { field: 'email', headerName: 'Correo Electrónico', flex: 1 },
     { field: 'telephone', headerName: 'Teléfono', flex: 1 },
+    { field: 'dui', headerName: 'DUI', flex: 1 },
   ],
 
   getMany: async ({ paginationModel }) => {
@@ -32,18 +33,19 @@ const branchesDataSource = {
     const data = await response.json();
     console.log("Datos recibidos de la API:", data);
 
-    const items = data.map(branch => {
+    const items = data.map(customer => {
       return {
-        id: branch._id,
-        name: branch.name || '',
-        address: branch.address || '',
-        birthday: branch.birthday || '',
-        schedule: branch.schedule || '',
-        telephone: branch.telephone || '',
+        id: customer._id,
+        name: customer.name || '',
+        lastName: customer.lastName || '',
+        birthday: customer.birthday || '',
+        email: customer.email || '',
+        telephone: customer.telephone || '',
+        dui: customer.dui || '',
       };
     });
 
-    console.log("Sucursales transformadas:", items);
+    console.log("Clientes transformados:", items);
 
     const start = paginationModel?.page * paginationModel?.pageSize || 0;
     const end = start + (paginationModel?.pageSize || items.length);
@@ -56,7 +58,7 @@ const branchesDataSource = {
 
   getOne: async (id) => {
     const response = await fetch(`${API}/${id}`);
-    if (!response.ok) throw new Error("Sucursal no encontrada");
+    if (!response.ok) throw new Error("Cliente no encontrado");
     return await response.json();
   },
 
@@ -68,7 +70,7 @@ const branchesDataSource = {
       },
       body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error("Error al crear la sucursal");
+    if (!response.ok) throw new Error("Error al crear el cliente");
     return await response.json();
   },
 
@@ -80,7 +82,7 @@ const branchesDataSource = {
       },
       body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error("Error al actualizar la sucursal");
+    if (!response.ok) throw new Error("Error al actualizar el cliente");
     return await response.json();
   },
 
@@ -88,7 +90,7 @@ const branchesDataSource = {
     const response = await fetch(`${API}/${id}`, {
       method: "DELETE",
     });
-    if (!response.ok) throw new Error("Error al eliminar la sucursal");
+    if (!response.ok) throw new Error("Error al eliminar el cliente");
   },
 
   validate: (formValues) => {
@@ -98,82 +100,81 @@ const branchesDataSource = {
       issues.push({ message: "El nombre es obligatorio", path: ["name"] });
     }
 
-    if (!formValues.address) {
-      issues.push({ message: "La dirección es obligatoria", path: ["address"] });
+    if (!formValues.lastName) {
+      issues.push({ message: "El apellido es obligatorio", path: ["lastName"] });
     }
 
     if (!formValues.birthday || isNaN(formValues.birthday)) {
-      issues.push({ message: "La fecha de creación debe ser un número válido", path: ["birthday"] });
-    }
-    
-
-    if (!formValues.schedule) {
-      issues.push({ message: "El horario es obligatorio", path: ["schedule"] });
+      issues.push({ message: "La fecha de nacimiento debe ser un número válido", path: ["birthday"] });
     }
 
     if (!formValues.telephone || isNaN(formValues.telephone)) {
       issues.push({ message: "El teléfono debe ser un número válido", path: ["telephone"] });
     }
 
+    if (!formValues.dui) {
+      issues.push({ message: "El DUI es obligatorio", path: ["dui"] });
+    }
+
     return { issues };
   },
 };
 
-const branchesCache = new DataSourceCache();
+const customersCache = new DataSourceCache();
 
-export default function Branches() {
-  const router = useDemoRouter('/branches');
-  const [branch, setBranch] = useState(null); 
+export default function Customers() {
+  const router = useDemoRouter('/customers');
+  const [customer, setCustomer] = useState(null); 
 
-  const isCreating = router.pathname === '/branches/new';
-  const isEditing = /^\/branches\/[^/]+\/edit$/.test(router.pathname);
-  const match = router.pathname.match(/\/branches\/([^/]+)\/edit/);
+  const isCreating = router.pathname === '/customers/new';
+  const isEditing = /^\/customers\/[^/]+\/edit$/.test(router.pathname);
+  const match = router.pathname.match(/\/customers\/([^/]+)\/edit/);
   
-  const branchId = match ? match[1] : null;
+  const customerId = match ? match[1] : null;
 
   useEffect(() => {
-    if (isEditing && branchId) {
-      branchesDataSource.getOne(branchId)
-        .then(branchData => {
-          console.log('Sucursal para editar:', branchData);
-          setBranch(branchData); 
+    if (isEditing && customerId) {
+      customersDataSource.getOne(customerId)
+        .then(customerData => {
+          console.log('Cliente para editar:', customerData);
+          setCustomer(customerData); 
         })
         .catch(error => {
-          console.error('Error al obtener la sucursal:', error);
+          console.error('Error al obtener el cliente:', error);
         });
     }
-  }, [isEditing, branchId]);
+  }, [isEditing, customerId]);
 
   useEffect(() => {
     if (isCreating) {
-      setBranch(null);
+      setCustomer(null); 
     }
   }, [isCreating]);
-  
 
   return (
     <DemoProvider>
       <AppProvider theme={demoTheme} router={router}>
         <DashboardLayout>
-          <PageContainer title="Tabla de Sucursales">
+          <PageContainer title="Tabla de Clientes">
             {(isCreating || isEditing) && (
               <Box mb={2}>
-                <Button variant="outlined" color="secondary" onClick={() => router.navigate('/branches')}>
+                <Button variant="outlined" color="secondary" onClick={() => router.navigate('/customers')}>
                   Cancelar
                 </Button>
               </Box>
             )}
             <Crud
-              dataSource={branchesDataSource}
-              dataSourceCache={branchesCache}
-              rootPath="/branches"
+              dataSource={customersDataSource}
+              dataSourceCache={customersCache}
+              rootPath="/customers"
               initialPageSize={5}
               defaultValues={{
-                name: branch ? branch.name : '',
-                address: branch ? branch.address : '',
-                birthday: branch ? branch.birthday : '',
-                schedule: branch ? branch.schedule : '',
-                telephone: branch ? branch.telephone : ''
+                name: customer ? customer.name : '',
+                lastName: customer ? customer.lastName : '',
+                birthday: customer ? customer.birthday : '',
+                email: customer ? customer.email : '',
+                telephone: customer ? customer.telephone : '',
+                dui: customer ? customer.dui : '',
               }}  
             />
           </PageContainer>

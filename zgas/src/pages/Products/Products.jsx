@@ -34,8 +34,8 @@ const productsDataSource = {
     const items = data.map(product => {
       return {
         id: product._id,
-        name: product.name || '',  // Asignamos 'name'
-        description: product.description || '',  // Asignamos 'description'
+        name: product.name || '', 
+        description: product.description || '',  
         price: product.price || 0,
         stock: product.stock || 0,
       };
@@ -116,22 +116,22 @@ const productsCache = new DataSourceCache();
 
 export default function Products() {
   const router = useDemoRouter('/products');
-  const [product, setProduct] = useState(null); // Para guardar los datos del producto
+  const [product, setProduct] = useState(null); 
 
   const isCreating = router.pathname === '/products/new';
   const isEditing = /^\/products\/\d+\/edit$/.test(router.pathname);
 
-  // Extraer ID del producto de la URL para la edición
+
   const match = router.pathname.match(/\/products\/(\d+)\/edit/);
   const productId = match ? match[1] : null;
 
   useEffect(() => {
     if (isEditing && productId) {
-      // Llamamos a la API para obtener el producto con el ID
+
       productsDataSource.getOne(productId)
         .then(productData => {
           console.log('Producto para editar:', productData);
-          setProduct(productData); // Guardamos el producto en el estado
+          setProduct(productData); 
         })
         .catch(error => {
           console.error('Error al obtener el producto:', error);

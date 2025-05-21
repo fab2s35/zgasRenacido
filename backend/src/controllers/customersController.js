@@ -8,6 +8,20 @@ customersController.getcustomers = async (req, res) => {
   res.json(customers);
 };
 
+
+customersController.getcustomerById = async (req, res) => {
+  try {
+    const customer = await customersModel.findById(req.params.id);
+    if (!customer) {
+      return res.status(404).json({ message: "Cliente no encontrado" });
+    }
+    res.json(customer);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener el cliente", error });
+  }
+};
+
+
 // INSERT
 customersController.createcustomers = async (req, res) => {
   const { name, lastName, birthday, email, password, telephone, dui } = req.body;

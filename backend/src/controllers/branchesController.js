@@ -10,7 +10,7 @@ branchesController.getbranches = async (req, res) => {
 
 branchesController.getBranchById = async (req, res) => {
   try {
-    const branch = await Branch.findById(req.params.id);
+    const branch = await branchesModel.findById(req.params.id);
     if (!branch) {
       return res.status(404).json({ message: "Sucursal no encontrada" });
     }
@@ -22,8 +22,8 @@ branchesController.getBranchById = async (req, res) => {
 
 // INSERT
 branchesController.createbranches = async (req, res) => {
-  const { name, lastName, birthday, email, password, telephone, dui } = req.body;
-  const newbranches = new branchesModel({ name, lastName, birthday, email, password, telephone, dui});
+  const { name, address, birthday, schedule, telephone } = req.body;
+  const newbranches = new branchesModel({ name, address, birthday, schedule, telephone });
   await newbranches.save();
   res.json({ message: "branches save" });
 };
@@ -40,18 +40,12 @@ const deletedbranches = await branchesModel.findByIdAndDelete(req.params.id);
 // UPDATE
 branchesController.updatebranches = async (req, res) => {
   // Solicito todos los valores
-  const { name, lastName, birthday, email, password, telephone, dui  } = req.body;
+  const { name, address, birthday, schedule, telephone  } = req.body;
   // Actualizo
   await branchesModel.findByIdAndUpdate(
     req.params.id,
     {
-        name, 
-        lastName, 
-        birthday,
-         email, 
-         password, 
-         telephone, 
-         dui 
+      name, address, birthday, schedule, telephone 
     },
     { new: true }
   );

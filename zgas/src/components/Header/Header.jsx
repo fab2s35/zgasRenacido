@@ -29,7 +29,7 @@ function Header() {
                 <a href="/" className="nav-link">Inicio</a>
                 <a href="/Products" className="nav-link">Productos</a>
                 <a href="/Branches" className="nav-link">Sucursales</a>
-                <a href="#" className="nav-link">Company</a>
+                <a href="/Customers" className="nav-link">Clientes</a>
               </div>
             </nav>
           </header>
